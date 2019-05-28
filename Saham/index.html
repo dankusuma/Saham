@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Chart.js demo</title>
+        <!-- import plugin script -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js'></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+    </head>
+    <body>
+        <!-- line chart canvas element -->
+        <div class="container">
+            <br />
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-10">
+                    <select id="cmb-tahun" onchange="selecttahun()">
+                            <option value="2010">2005</option>
+                            <option value="2010">2006</option>
+                            <option value="2010">2007</option>
+                            <option value="2010">2008</option>
+                            <option value="2010">2009</option>
+                            <option value="2010">2010</option>
+                            <option value="2011">2011</option>
+                            <option value="2012">2012</option>
+                            <option value="2013">2013</option>
+                            <option value="2013">2014</option>
+                            <option value="2013">2015</option>
+                            <option value="2013">2016</option>
+                            <option value="2013">2017</option>
+                            <option value="2013">2018</option>
+                            <option value="2013">2019</option>
+                          </select>
+          <!--       Chart.js Canvas Tag -->
+          <canvas id="buyers" width="1000" height="400"></canvas>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+          </div>
+        
+        <!-- pie chart canvas element -->
+        <script>
+
+            initgraph();
+
+
+               function selecttahun() {
+        initgraph();
+        console.log(x);
+        }
+      
+
+
+        function initgraph()
+        {
+            var stockdataBCA=[];
+        var stockdataMandiri=[];
+        var stockdataDanamon=[];
+        var stockdataCIMB=[];
+        var stockdataMAYA=[];
+        var stockdatacloseBCA=[];
+        var stockdatacloseMandiri=[];
+        var stockdatacloseDanamon=[];
+        var stockdatacloseCIMB=[];
+        var stockdatacloseMAYA=[];
+         $.ajax({
+            type:"GET",
+            url:"http://localhost:63622/api/DataStock/SMAALLBANK/"+document.getElementById("cmb-tahun").value+"/"+document.getElementById("cmb-tahun").value,
+                success: function(data) {
+                    for (var i = 0; i < 4; i++) {
+                    stockdataBCA.push(data.BCA[i]);
+                    stockdataMandiri.push(data.Mandiri[i]);
+                    stockdataDanamon.push(data.Danamon[i]);
+                    stockdataCIMB.push(data.CIMB[i]);
+                    stockdataMAYA.push(data.MAYA[i]);
+                    stockdatacloseBCA.push(stockdataBCA[i].average);
+                    stockdatacloseMandiri.push(stockdataMandiri[i].average);
+                    stockdatacloseDanamon.push(stockdataDanamon[i].average);
+                    stockdatacloseCIMB.push(stockdataCIMB[i].average);
+                    stockdatacloseMAYA.push(stockdataMAYA[i].average);
+                }
+
+                
+                var ctx = document.getElementById('buyers').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['Maret', 'Juni', 'September', 'Desember'],
+        datasets: [{
+				label: "BCA",
+                fill: false,
+                borderColor : "rgb(0, 0, 255,1)",
+				data: stockdatacloseBCA
+        }, 
+        {
+				label: "Mandiri",
+                fill: false,
+                borderColor : "rgb(255, 0, 0)",
+				data: stockdatacloseMandiri
+		}, 
+        {
+                label: "Danamon",
+                fill: false,
+				borderColor : "rgb(102, 255, 102)",
+				data: stockdatacloseDanamon
+        },
+        {
+                label: "CIMB",
+                fill: false,
+				borderColor : "rgb(255, 255, 0)",
+				data: stockdatacloseCIMB
+        },
+        {
+                label: "MAYA",
+                fill: false,
+				borderColor : "rgb(255,191,0)",
+				data: stockdatacloseMAYA
+		}
+    ]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+
+           
+            }
+                
+            }
+        );
+
+        }
+
+        
+        </script>
+    </body>
+</html>
